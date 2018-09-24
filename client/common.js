@@ -32,3 +32,37 @@ function getUrlQuery(url) {
     });
     return result;
 }
+
+
+function captureStackTrace(_, stack) {
+    return stack;
+}
+
+function getCallInfo(level) {
+
+    var res = {
+        line: 0,
+        column: 0,
+        filename: ''
+    };
+
+    if( Error.stackTraceLimit && Error.captureStackTrace){
+
+    	level = level || 0;
+    	var origLimit = Error.stackTraceLimit;
+    	Error.stackTraceLimit = 5;
+
+    	var err = Object.create(null);
+    	Error.captureStackTrace(err, arguments.callee);     // eslint-disable-line no-caller
+    	var stack = err.stack;
+
+    	Error.stackTraceLimit = origLimit;
+
+    	if (stack && stack[level] && typeof stack[level].getLineNumber === 'function') {
+    	    res.line = stack[level].getLineNumber();
+    	    res.column = stack[level].getColumnNumber();
+    	    res.filename = stack[level].getFileName();
+    	}
+    }
+    return res;
+};

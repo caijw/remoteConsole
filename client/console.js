@@ -3,18 +3,19 @@ url: http://127.0.0.1:12701/client.html?id={id}&type={type}
 example:
 http://127.0.0.1:12701/client.html?id=3408807607&type=console
 */
+import * as common from './common.js';
 
-var query = getUrlQuery(location.href);
-var id = query.id; /*唯一标志两端的id*/
-var type = query.type;
+const query = common.getUrlQuery(location.href);
+const id = query.id; /*唯一标志两端的id*/
+const type = query.type;
 
-var wsUrl = 'ws://' + WS_CONFIG.address + ':' + WS_CONFIG.port + '/?id=' + id + '&type=' + type;
+const wsUrl = 'ws://' + common.WS_CONFIG.address + ':' + common.WS_CONFIG.port + '/?id=' + id + '&type=' + type;
 
-if(!supportWebSocket()){
+if(!common.supportWebSocket()){
     alert('不支持websocket');
 }else{
 
-	var cmdMap = {
+	let cmdMap = {
 	    logger_log: function (params) {
 	        console.log.apply(console, params);
 
@@ -27,7 +28,7 @@ if(!supportWebSocket()){
 	    }
 	};
 
-	var socket = new WebSocket(wsUrl);
+	let socket = new WebSocket(wsUrl);
 	// Connection opened
 	socket.addEventListener('open', function (event) {
 	    
@@ -35,25 +36,25 @@ if(!supportWebSocket()){
 
 	// Listen for messages
 	socket.addEventListener('message', function (event) {
-	    var data = event.data || '{}';
+	    let data = event.data || '{}';
 	    data = JSON.parse(data);
-	    var cmd = data.cmd;
-	    var params = data.params || [];
+	    let cmd = data.cmd;
+	    let params = data.params || [];
 	    
 	    if(cmdMap[cmd]){
 	        cmdMap[cmd](params);
 	    }
 	});
-	var commandContentEle = document.querySelector('#commandContent');
-	var execCommandEle = document.querySelector('#execCommand');
+	let commandContentEle = document.querySelector('#commandContent');
+	let execCommandEle = document.querySelector('#execCommand');
 	execCommandEle.addEventListener('click', function (event) {
-		var commondStr = commandContentEle.value || '';
+		let commondStr = commandContentEle.value || '';
 		commondStr = commondStr.trim();
-		if(socket.readyState !== readyState.OPEN){
+		if(socket.readyState !== common.readyState.OPEN){
 		    alert('socket readyState ' + socket.readyState + ' , not OPEN');
 		    return;
 		}
-		var data = {
+		let data = {
 			cmd: commondStr
 		}
 		socket.send( JSON.stringify(data) );

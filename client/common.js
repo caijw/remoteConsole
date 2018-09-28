@@ -1,6 +1,6 @@
 const WS_CONFIG = {
-    address: 'localhost',
-    port: '8080'
+    address: 'h5.qzone.qq.com/ohMy/console',
+    port: '80'
 };
 
 function supportWebSocket() {

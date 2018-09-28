@@ -9,7 +9,7 @@ const query = common.getUrlQuery(location.href);
 const id = query.id; /*唯一标志两端的id*/
 const type = query.type;
 
-const wsUrl = 'ws://' + common.WS_CONFIG.address + ':' + common.WS_CONFIG.port + '/?id=' + id + '&type=' + type;
+const wsUrl = 'ws://' + common.WS_CONFIG.address + '?id=' + id + '&type=' + type;
 
 if(!common.supportWebSocket()){
     alert('不支持websocket');
